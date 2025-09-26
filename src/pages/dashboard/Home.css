@@ -1,0 +1,105 @@
+:root {
+  --bg: #f5f7fb;
+  --ink: #111827;
+  --panel: #ffffff;
+  --border: #e5e7eb;
+}
+
+.layout {
+  min-height: 100vh;
+  background:
+    radial-gradient(#e5e7eb 1px, transparent 1px) 0 0/20px 20px,
+    var(--bg);
+  position: relative;
+  color: var(--ink);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    "Helvetica Neue", Arial, "Noto Sans";
+}
+
+/* Puntuación */
+.score {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 2px 0 var(--ink);
+}
+.score .star { margin-left: 4px; }
+
+/* Flecha lateral */
+.side-arrow {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 100px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: 0 2px 0 var(--ink);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Contenedor del radial */
+.center-area {
+  min-height: 70vh;
+}
+
+/* Barra inferior */
+.bottom-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+}
+
+.bottom-btn {
+  min-width: 84px;
+  padding: 12px 18px;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 2px 0 var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Botón ayuda */
+.help-btn {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 0 var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Cerrar */
+.close-btn {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  box-shadow: 0 2px 0 var(--ink);
+  font-size: 20px;
+  cursor: pointer;
+}
