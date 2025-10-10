@@ -1,6 +1,7 @@
 import React from "react";
 import { Menu, MenuItem, SubMenu } from "@spaceymonk/react-radial-menu";
 
+/*
 export default function RadialQuickChat({
   centerX,
   centerY,
@@ -24,12 +25,43 @@ export default function RadialQuickChat({
       centerY={centerY}
       innerRadius={90}
       outerRadius={180}
-      show={true}                 // SIEMPRE visible
+      show={true}                 
       animation={["fade", "scale"]}
       animationTimeout={160}
       drawBackground
     >
-      {/* 6 secciones como tu boceto */}
+    */
+
+  export default function RadialQuickChat({
+  centerX,
+  centerY,
+  onItem = () => {},
+  onCenter = () => {},
+  innerRadius = 90,   
+  outerRadius = 180,  
+  }) {
+    const handleItemClick = (e, idx, data) => {
+    onItem(data);
+    };
+    const handleSubMenuClick = (e, idx, data) => {
+      onItem(data);
+    };
+    const handleDisplayClick = () => {
+      onCenter();
+    };
+
+    return (
+    <Menu
+      centerX={centerX}
+      centerY={centerY}
+      innerRadius={innerRadius}   
+      outerRadius={outerRadius}   
+      show={true}
+      animation={["fade", "scale"]}
+      animationTimeout={160}
+      drawBackground
+    >
+      {/* secciones */}
       <SubMenu
         onDisplayClick={handleDisplayClick}
         onItemClick={handleSubMenuClick}
