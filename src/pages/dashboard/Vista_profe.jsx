@@ -1,9 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Vista_profe.css";
 
 export default function Vista_profe() {
   const [menuOpen, setmenuOpen] = useState(true);
+  const location = useLocation(); 
+  const navigate = useNavigate();
+  const Nombre_clase = location.state?.Nombre_clase || "Clase sin nombre";
+
+  const cerrar_clase = () => {
+    navigate("/crear_clase");
+  }
 
   const items = [
     { id: 1, nombre: "Kennett", img: "", pictograma: "🔥" },
@@ -26,8 +34,10 @@ export default function Vista_profe() {
         >
           {menuOpen ? "Ocultar chats" : "Mostrar chats"}
         </button>
-
-        <h1 className="m-0 text-white">Clase</h1>
+        <h1 className="m-0 text-white">{Nombre_clase}</h1>
+        <button className="btn btn-outline-light ms-auto" onClick={cerrar_clase}>
+          Cerrar clase
+        </button>
       </header>
 
       <div className="layout d-flex">
@@ -57,12 +67,10 @@ export default function Vista_profe() {
                     <div className="pictograma" aria-hidden>
                       {item.pictograma}
                     </div>
-
                     <img
                       src={item.img}
                       className="rounded-circle mx-auto d-block f-perfil"  
                     />
-
                     <div className="nombre mt-2">{item.nombre}</div>
                   </div>
                 </div>
