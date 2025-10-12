@@ -1,0 +1,60 @@
+.picto-card{
+  cursor:pointer;
+  background:#e5e7eb;
+  border:2px solid #0f172a;
+  border-radius:14px;
+  box-shadow:0 3px 0 #0f172a;
+  transition:transform .12s ease, filter .12s ease;
+  padding:12px;
+  width:200px;     
+  height:180px;    
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.picto-card:hover{ transform:translateY(-2px); filter:brightness(1.03); }
+
+.picto-figure{ margin:0; width:100%; height:100%; display:grid; grid-template-rows:1fr auto; }
+
+.picto-media{
+  position:relative;
+  background:#d1d5db;
+  border:2px dashed #6b7280;
+  border-radius:8px;
+  overflow:hidden;
+
+  aspect-ratio: 4 / 3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.picto-media img{
+  width:100%;
+  height:100%;
+  object-fit:contain;   
+  display:block;
+}
+
+.picto-skeleton{
+  position:absolute; inset:0;
+  background:linear-gradient(90deg,#e5e7eb, #f3f4f6, #e5e7eb);
+  animation:picto-shimmer 1.2s infinite;
+}
+@keyframes picto-shimmer{
+  0%{ background-position:-100% 0; }
+  100%{ background-position:200% 0; }
+}
+
+.picto-fallback{
+  font-weight:800; font-size:28px; color:#374151;
+}
+
+
+.picto-caption{
+  margin-top:8px;
+  font-weight:700;
+  text-align:center;
+  line-height:1.1;
+}
+

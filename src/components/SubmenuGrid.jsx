@@ -1,13 +1,13 @@
-// src/components/SubmenuGrid.jsx
 import React from "react";
 import "./SubmenuGrid.css";
 import useArasaacSearch from "../hooks/useArasaacSearch";
 import { pictoImageUrl } from "../api/arasaac";
+import PictogramCard from "./PictogramCard";
 
 export default function SubmenuGrid({
   title,
-  items = [],              // por si quieres mezclar local + remoto
-  remoteTerm = null,       // ← NUEVO: si viene, se ignora 'items' y se busca en ARASAAC
+  items = [],
+  remoteTerm = null,
   lang = 'es',
   onPick = () => {},
   anchor = "center",
@@ -21,16 +21,30 @@ export default function SubmenuGrid({
     anchor === "center" ? "submenu-overlay overlay-center" : "submenu-overlay overlay-dock";
 
   const { data, loading, error } = useArasaacSearch(remoteTerm, lang);
-  const list = remoteTerm ? data : items.map((t, i) => ({ id: `local-${i}`, label: t }));
+
+  // mostrar solo 6
+  const limitedData = remoteTerm ? data.slice(0, 6) : items.slice(0, 6);
+  const list = remoteTerm
+    ? limitedData
+    : limitedData.map((t, i) => ({ id: `local-${i}`, label: t }));
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
   return (
-    <div className={`${overlayClass} is-open`} style={overlayStyle} onClick={(e)=>{ if(e.target===e.currentTarget) onClose(); }}>
+    <div className={`${overlayClass} is-open`} style={overlayStyle} onClick={handleOverlayClick}>
       <div className="submenu-panel">
         <div className="submenu-grid-header">{title}</div>
 
         {loading && <div className="grid-status">Buscando pictogramas…</div>}
-        {error && <div className="grid-status error">Error cargando ARASAAC: {String(error.message ?? error)}</div>}
+        {error && (
+          <div className="grid-status error">
+            Error cargando ARASAAC: {String(error.message ?? error)}
+          </div>
+        )}
 
+        {/* === AQUÍ USAMOS PictogramCard === */}
         <div className="submenu-grid-tiles">
           {list.map((item) => {
             const id   = item.id;
@@ -38,25 +52,12 @@ export default function SubmenuGrid({
             const src  = remoteTerm ? pictoImageUrl(id, { size: 500, prefer: 'png', lang }) : null;
 
             return (
-              <button
+              <PictogramCard
                 key={id}
-                className="submenu-tile"
-                aria-label={`Seleccionar ${name}`}
-                onClick={() => onPick(name)}
                 title={name}
-              >
-                <div className="tile-art">
-                  {remoteTerm && src && (
-                    <img
-                      src={src}
-                      alt={name}
-                      loading="lazy"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  )}
-                </div>
-                <div className="tile-label">{name}</div>
-              </button>
+                src={src}
+                onClick={() => onPick(name)}
+              />
             );
           })}
         </div>
@@ -68,3 +69,4 @@ export default function SubmenuGrid({
     </div>
   );
 }
+

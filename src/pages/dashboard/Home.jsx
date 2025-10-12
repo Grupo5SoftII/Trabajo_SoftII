@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import RadialQuickChat from "../../components/RadialQuickChat";
 import SubmenuGrid from "../../components/SubmenuGrid";
+import SearchBar from "../../components/SearchBar";
+import Header from "../../components/Header";          // ⬅️ IMPORTA TU HEADER
 import "./Home.css";
 
 export default function Home() {
@@ -14,7 +16,10 @@ export default function Home() {
   const [mode, setMode] = useState("center"); // 'center' | 'docked'
   const [selectedCat, setSelectedCat] = useState(null);
 
-  // Catálogo de submenús (placeholders por ahora)
+  // Búsqueda libre
+  const [searchTerm, setSearchTerm] = useState(null);
+
+  // Catálogo de submenús (por ahora no lo usamos para la API, lo dejamos)
   const submenus = {
     Emociones: ["Feliz", "Triste", "Molesto", "Calmo", "Ansioso", "Sorprendido"],
     Preguntas: ["¿Qué pasó?", "¿Cómo te sientes?", "¿Necesitas ayuda?", "¿Quién?", "¿Dónde?", "¿Cuándo?"],
@@ -31,7 +36,7 @@ export default function Home() {
   useEffect(() => {
     const calc = () => {
       const w = window.innerWidth;
-      const scale = 1.2; // súbelo si quieres la rueda más grande
+      const scale = 1.2;
       const outer = Math.max(150, Math.min(240, Math.floor(w * 0.22 * scale)));
       const inner = Math.floor(outer * 0.5);
       setRadii({ inner, outer });
@@ -73,13 +78,21 @@ export default function Home() {
   };
 
   const handlePickSub = (val) => {
-    console.log(`Elegiste ${selectedCat} → ${val}`);
+    console.log(`Elegiste ${selectedCat || searchTerm} → ${val}`);
     setPuntos((p) => p + 1);
+  };
+
+  // Buscar desde la barra
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setSelectedCat(null);  // opcional: limpiar categoría
+    setMode("docked");
   };
 
   const undock = () => {
     setMode("center");
     setSelectedCat(null);
+    setSearchTerm(null);
   };
 
   // Estado actual del menú (centrado/acoplado) y radios efectivos
@@ -87,68 +100,55 @@ export default function Home() {
   const menuOuter = isDocked ? Math.round(radii.outer * 0.75) : radii.outer;
   const menuInner = Math.round(menuOuter * 0.5);
 
-  // --- Offsets del grid: NO se superpone y queda centrado sobre la rueda ---
-  const h = window.innerHeight;
-  const w = window.innerWidth;
+  // ===== Barra de búsqueda debajo del radial (sin superponer) =====
+  const BAR_H = 46;          // alto aprox. de la barra
+  const EXTRA_GAP = 40;      // espacio extra bajo la rueda
+  const maxTop = window.innerHeight - (SAFE.bottomBar + BAR_H + SAFE.gap);
 
-  // Borde superior de la rueda (cuando está acoplada)
-  const wheelTop = center.y - menuOuter;
-  // Distancia de la rueda al borde derecho (por si quisieras usarla)
-  const wheelRight = w - (center.x + menuOuter);
-
-  // Altura: justo POR ENCIMA de la rueda, respetando barra inferior
-  const gridBottomOffset = Math.max(
-    h - wheelTop + SAFE.gap,      // por encima de la rueda
-    SAFE.bottomBar + SAFE.gap     // respeta la barra A1–A5
-  );
-
-  // Ancho aproximado del grid en desktop (3 columnas)
-  const TILE_W = 140, GAP = 12, COLS_DESKTOP = 3;
-  const approxGridWidth = COLS_DESKTOP * TILE_W + (COLS_DESKTOP - 1) * GAP;
-
-  // Centrar horizontalmente sobre el centro de la rueda,
-  // evitando invadir botón de ayuda (derecha) y margen izquierdo.
-  const rightSafeX = w - (SAFE.helpBtn + SAFE.gap) - approxGridWidth / 2;
-  const leftSafeX = SAFE.margin + approxGridWidth / 2;
-
-  const desiredCenterX = center.x;
-  const clampedCenterX = Math.max(leftSafeX, Math.min(desiredCenterX, rightSafeX));
+  const searchBarStyle =
+    mode === "center"
+      ? {
+          position: "fixed",
+          left: center.x,
+          top: Math.min(maxTop, center.y + menuOuter + EXTRA_GAP),
+          transform: "translateX(-50%)",
+          zIndex: 10000,
+        }
+      : {
+          position: "fixed",
+          right: SAFE.margin,
+          bottom: SAFE.margin,
+          zIndex: 10000,
+        };
 
   return (
     <div className="layout">
-      {/* Menú radial */}
-      <RadialQuickChat
-        centerX={center.x}
-        centerY={center.y}
-        innerRadius={menuInner}
-        outerRadius={menuOuter}
-        onItem={(cat) => { setSelectedCat(cat); setMode("docked"); setPuntos((p) => p + 1); }}
-        onCenter={handleCenter}
-      />
+      {/* Header global (de tu carpeta components) */}
+      <Header puntos={puntos} />
 
-      {/* Grid de submenús (centrado sobre la rueda acoplada) }
-      {isDocked && selectedCat && (
-        <SubmenuGrid
-          anchor="center"                 // ← ahora centrado en la pantalla
-          title={selectedCat}
-          items={submenus[selectedCat]}
-          onPick={handlePickSub}
+      {/* Menú radial (solo cuando no hay panel abierto) */}
+      {!selectedCat && !searchTerm && (
+        <RadialQuickChat
+          centerX={center.x}
+          centerY={center.y}
+          innerRadius={menuInner}
+          outerRadius={menuOuter}
+          onItem={(cat) => { setSelectedCat(cat); setMode("docked"); setPuntos((p) => p + 1); }}
+          onCenter={handleCenter}
         />
       )}
-      {/* Panel centrado con resultados de ARASAAC */}
-      {isDocked && selectedCat && (
+
+      {/* Panel centrado: por categoría o por búsqueda */}
+      {isDocked && (selectedCat || searchTerm) && (
         <SubmenuGrid
           anchor="center"
-          title={selectedCat}
-          // term remoto que consultará la API (usa la propia categoría)
-          remoteTerm={selectedCat}
+          title={selectedCat || `Resultados: ${searchTerm}`}
+          remoteTerm={searchTerm || selectedCat}
           lang="es"
           onPick={handlePickSub}
-          onClose={() => { setSelectedCat(null); setMode("center"); }}
+          onClose={undock}
         />
       )}
-
-
 
       {/* Botón volver al centro */}
       {isDocked && (
@@ -156,6 +156,9 @@ export default function Home() {
           Volver al centro
         </button>
       )}
+
+      {/* Barra de búsqueda debajo del radial */}
+      <SearchBar onSearch={handleSearch} style={searchBarStyle} />
     </div>
   );
 }

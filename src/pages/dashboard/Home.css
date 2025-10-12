@@ -110,4 +110,6 @@
   z-index: 9999;        
 }
 
+.layout { padding-top: 72px; } /* ajusta 64–80 según la altura real del header */
+
 
