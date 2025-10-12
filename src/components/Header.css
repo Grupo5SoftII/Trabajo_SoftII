@@ -1,0 +1,11 @@
+.header{
+     height:64px;
+     background: linear-gradient(90deg,#01ffaf,#6610f2);
+     position:fixed;
+     top:0;
+     left:0;
+     right:0;
+     z-index:1000;
+ }
+
+.header .text-white{ color:#fff; }

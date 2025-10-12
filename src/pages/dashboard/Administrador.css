@@ -1,0 +1,110 @@
+/* Estilos compartidos para todas las páginas del Administrador */
+
+.header {
+  height: 64px;
+  background: linear-gradient(90deg, #01ffaf, #6610f2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.layout {
+  margin-top: 64px;
+  min-height: calc(100vh - 64px);
+  background-color: #f8f9fa;
+}
+
+.base {
+  flex: 1;
+}
+
+/* Estilos para las cards del panel principal */
+.admin-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  border-color: #6610f2;
+}
+
+.icon-wrapper {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+/* Estilos para tablas */
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead {
+  background: linear-gradient(90deg, #01ffaf, #6610f2);
+  color: white;
+}
+
+.table thead th {
+  color: white;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f3f5;
+  cursor: pointer;
+}
+
+/* Responsive ajustes */
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.875rem;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    border-radius: 4px !important;
+    margin-bottom: 4px;
+  }
+}
+
+/* Estilos para las estadísticas */
+.card {
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge personalizado */
+.badge {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
