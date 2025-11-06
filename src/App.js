@@ -5,11 +5,13 @@ import Crear_clase from "./pages/dashboard/Crear_clase";
 import Administrador from "./pages/dashboard/Administrador";
 import ListaProfesores from "./pages/dashboard/ListaProfesores";
 import HistorialUltimasReuniones from "./pages/dashboard/HistorialUltimasReuniones";
+import Login from "./pages/login/Login"; // NUEVA PÁGINA
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/login" element={<Login />} /> {/* RUTA LOGIN */}
         <Route path="/" element={<Home />} />
         <Route path="/profe" element={<Vista_profe />} />
         <Route path="/crear_clase" element={<Crear_clase />} />
