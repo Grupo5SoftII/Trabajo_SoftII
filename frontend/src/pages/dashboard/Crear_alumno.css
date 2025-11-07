@@ -1,0 +1,100 @@
+/* Header igual que el que me pasaste */
+.header {
+  height: 64px;
+  background: linear-gradient(90deg, #01ffaf, #6610f2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Estructura general */
+.CrearAlumno {
+  min-height: 100vh;
+  background: #f4f5fb;
+}
+
+/* layout debajo del header */
+.layout {
+  margin-top: 64px; /* para que no se tape con el header */
+}
+
+/* menú lateral */
+.menu {
+  width: 230px;
+  min-height: calc(100vh - 64px);
+  border-right: 1px solid #ddd;
+  transition: width 0.3s ease;
+}
+
+.menu.closed {
+  width: 0;
+  overflow: hidden;
+}
+
+/* contenido principal */
+.base {
+  flex: 1;
+  min-height: calc(100vh - 64px);
+}
+
+/* tarjeta del formulario */
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2.5rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow: 0 10px 25px rgba(37, 50, 105, 0.08);
+  border: 1px solid rgba(102, 16, 242, 0.05);
+}
+
+.form-card h2 {
+  font-weight: 700;
+  color: #333;
+}
+
+/* labels y campos grandes */
+.form-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.form-control-lg,
+.form-select-lg {
+  border-radius: 10px;
+  border: 1px solid #dfe3ea;
+  background: #f9fafc;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-control-lg:focus,
+.form-select-lg:focus {
+  border-color: #6610f2;
+  background: #fff;
+  box-shadow: 0 0 0 0.1rem rgba(102, 16, 242, 0.15);
+}
+
+/* botón principal */
+.btn-primary {
+  background: linear-gradient(90deg, #6610f2, #4f6cff);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.97);
+}
+
+@media (max-width: 992px) {
+  .form-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  .menu.open {
+    width: 180px;
+  }
+}

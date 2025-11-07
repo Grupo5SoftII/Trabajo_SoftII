@@ -8,6 +8,8 @@ import ListaProfesores from "./pages/dashboard/ListaProfesores";
 import HistorialUltimasReuniones from "./pages/dashboard/HistorialUltimasReuniones";
 import Login from "./pages/login/Login";
 import Room from "./pages/dashboard/Room";
+import Inicio from "./pages/dashboard/Inicio";
+import Crear_alumno from "./pages/dashboard/Crear_alumno";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/admin/profesores" element={<ListaProfesores />} />
         <Route path="/admin/reuniones" element={<HistorialUltimasReuniones />} />
         <Route path="/room/:roomId" element={<Room />} />
+        <Route path="/inicio" element={<Inicio />} />
+        <Route path="/crear_alumno" element={<Crear_alumno />} />
       </Routes>
     </Router>
   );
