@@ -113,7 +113,7 @@ export default function RadialQuickChat({
       <SubMenu
         onDisplayClick={handleDisplayClick}
         onItemClick={handleSubMenuClick}
-        itemView="Descrición"
+        itemView="Descripción"
         data="Descripción"
         displayPosition="bottom"
       >
