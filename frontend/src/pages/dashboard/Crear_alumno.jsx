@@ -13,9 +13,10 @@ export default function Crear_alumno() {
     nombres: "",
     apellidos: "",
     edad: "",
-    condicion: "",
+    tipoUsuario: "Alumno", // Tipo de usuario fijo
     usuario: "",
     password: "",
+    confirmPassword: "", // Solo estos dos campos
   });
 
   const handleChange = (e) => {
@@ -29,6 +30,13 @@ export default function Crear_alumno() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validación para asegurarse de que las contraseñas coincidan
+    if (formData.password !== formData.confirmPassword) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+
     console.log("Alumno creado:", formData);
   };
 
@@ -111,14 +119,13 @@ export default function Crear_alumno() {
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Condición</label>
+                  <label className="form-label">Tipo de usuario</label>
                   <input
                     type="text"
-                    name="condicion"
+                    name="tipoUsuario"
                     className="form-control form-control-lg"
-                    value={formData.condicion}
-                    onChange={handleChange}
-                    placeholder=""
+                    value={formData.tipoUsuario}
+                    readOnly // Campo inamovible
                   />
                 </div>
                 <div className="col-md-4">
@@ -140,6 +147,18 @@ export default function Crear_alumno() {
                     name="password"
                     className="form-control form-control-lg"
                     value={formData.password}
+                    onChange={handleChange}
+                    placeholder="********"
+                    required
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Confirmar Contraseña</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    className="form-control form-control-lg"
+                    value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="********"
                     required
