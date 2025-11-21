@@ -163,44 +163,7 @@ export default function Home() {
       {/* Barra de búsqueda debajo del radial */}
       <SearchBar onSearch={handleSearch} style={searchBarStyle} />
 
-      {/* Room Creation Form */}
-      <div className="room-creation" style={{
-        position: 'fixed',
-        bottom: '20px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 10000,
-        background: 'white',
-        padding: '15px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-      }}>
-        <div className="input-group">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter 4-digit room number"
-            value={roomNumber}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-              setRoomNumber(value);
-            }}
-            pattern="[0-9]{4}"
-            maxLength="4"
-          />
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              if (roomNumber.length === 4) {
-                navigate(`/room/${roomNumber}`);
-              }
-            }}
-            disabled={roomNumber.length !== 4}
-          >
-            Join Room
-          </button>
-        </div>
-      </div>
+      {/* Room input moved to Inicio page */}
     </div>
   );
 }
