@@ -15,7 +15,7 @@ import { Chat } from "../domain/Chat.js";
 import { Pictograma } from "../domain/Pictograma.js";
 import { MensajePictograma } from "../domain/MensajePictograma.js";
 
-const mapUsuario = (row: any) => new Usuario(row.id, row.nombre, row.edad, row.tipo);
+const mapUsuario = (row: any) => new Usuario(row.id, row.nombre, row.apellidos, row.edad, row.tipo, row.usuario);
 const mapAula = (row: any) => new Aula(row.id, row.nombre, row.grado, row.profesor_encargado);
 const mapUsuarioAula = (row: any) => new UsuarioAula(row.id, row.usuario_id, row.aula_id);
 const mapChat = (row: any) => new Chat(row.id, row.tipo, row.aula_id);
@@ -25,7 +25,7 @@ const mapMensaje = (row: any) =>
 
 export class PostgresUsuarioRepo implements UsuarioRepo {
   async listAll() {
-    const { rows } = await pool.query("SELECT id, nombre, edad, tipo FROM usuarios ORDER BY id");
+    const { rows } = await pool.query("SELECT id, nombre, apellidos, edad, tipo, usuario FROM usuarios ORDER BY id");
     return rows.map(mapUsuario);
   }
 
