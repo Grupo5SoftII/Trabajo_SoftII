@@ -1,0 +1,516 @@
+{
+	"info": {
+		"_postman_id": "pictotap-api-tests",
+		"name": "PICTOTAP API - Validaciones BD",
+		"description": "Colección completa para validar la comunicación entre backend y base de datos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Info API",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": ["{{base_url}}"],
+					"path": [""]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response contains API info', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.name).to.equal('PICTOTAP API');",
+							"    pm.expect(json.status).to.equal('ok');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "1. GET Usuarios - Listar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/usuarios",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response is array with users', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.be.an('array');",
+							"    pm.expect(json.length).to.be.greaterThan(0);",
+							"});",
+							"",
+							"pm.test('Users have required fields', function () {",
+							"    const users = pm.response.json();",
+							"    users.forEach(user => {",
+							"        pm.expect(user).to.have.property('id');",
+							"        pm.expect(user).to.have.property('nombre');",
+							"        pm.expect(user).to.have.property('edad');",
+							"        pm.expect(user).to.have.property('tipo');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. POST Usuario - Crear",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Usuario Test\",\n  \"edad\": 30,\n  \"tipo\": \"PROFESOR\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/usuarios",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('User created with ID', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.have.property('id');",
+							"    pm.expect(json.nombre).to.equal('Usuario Test');",
+							"    pm.globals.set('test_usuario_id', json.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. GET Usuario Específico",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{test_usuario_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios", "{{test_usuario_id}}"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Returns correct user', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.nombre).to.equal('Usuario Test');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. PUT Usuario - Actualizar",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Usuario Test Updated\",\n  \"edad\": 31\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{test_usuario_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios", "{{test_usuario_id}}"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('User updated correctly', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.nombre).to.equal('Usuario Test Updated');",
+							"    pm.expect(json.edad).to.equal(31);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "5. GET Pictogramas - Listar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/pictogramas",
+					"host": ["{{base_url}}"],
+					"path": ["pictogramas"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response contains pictograms', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "6. POST Pictograma - Crear",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"https://picsum.photos/seed/test/64\",\n  \"titulo\": \"TEST_PICTOGRAM\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/pictogramas",
+					"host": ["{{base_url}}"],
+					"path": ["pictogramas"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Pictogram created', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.have.property('id');",
+							"    pm.globals.set('test_pictogram_id', json.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "7. GET Aulas - Listar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/aulas",
+					"host": ["{{base_url}}"],
+					"path": ["aulas"]
+				}
+			}
+		},
+		{
+			"name": "8. POST Aula - Crear",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"Aula Test\",\n  \"grado\": \"3ro\",\n  \"profesorEncargado\": 1\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/aulas",
+					"host": ["{{base_url}}"],
+					"path": ["aulas"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Aula created', function () {",
+							"    const json = pm.response.json();",
+							"    pm.globals.set('test_aula_id', json.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "9. GET Chats - Listar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/chats",
+					"host": ["{{base_url}}"],
+					"path": ["chats"]
+				}
+			}
+		},
+		{
+			"name": "10. GET Mensajes de Chat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/chats/100/mensajes",
+					"host": ["{{base_url}}"],
+					"path": ["chats", "100", "mensajes"]
+				}
+			}
+		},
+		{
+			"name": "11. POST Mensaje - Enviar",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"emisorId\": 2,\n  \"pictogramaId\": 1000\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/chats/100/mensajes",
+					"host": ["{{base_url}}"],
+					"path": ["chats", "100", "mensajes"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Message created', function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.have.property('id');",
+							"    pm.globals.set('test_mensaje_id', json.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "12. GET Inscripciones",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/inscripciones",
+					"host": ["{{base_url}}"],
+					"path": ["inscripciones"]
+				}
+			}
+		},
+		{
+			"name": "13. POST Inscripción Usuario-Aula",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/aulas/{{test_aula_id}}/usuarios/{{test_usuario_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["aulas", "{{test_aula_id}}", "usuarios", "{{test_usuario_id}}"]
+				}
+			}
+		},
+		{
+			"name": "14. ERROR - Usuario Inexistente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/usuarios/99999",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios", "99999"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 404', function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "15. ERROR - Datos Inválidos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nombre\": \"\",\n  \"edad\": -5,\n  \"tipo\": \"INVALID\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/usuarios",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 400', function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "96. DELETE Mensaje Test",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/chats/100/mensajes/{{test_mensaje_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["chats", "100", "mensajes", "{{test_mensaje_id}}"]
+				}
+			}
+		},
+		{
+			"name": "97. DELETE Pictograma Test",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/pictogramas/{{test_pictogram_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["pictogramas", "{{test_pictogram_id}}"]
+				}
+			}
+		},
+		{
+			"name": "98. DELETE Aula Test",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/aulas/{{test_aula_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["aulas", "{{test_aula_id}}"]
+				}
+			}
+		},
+		{
+			"name": "99. DELETE Usuario Test",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{test_usuario_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["usuarios", "{{test_usuario_id}}"]
+				}
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3001",
+			"type": "string"
+		}
+	]
+}
