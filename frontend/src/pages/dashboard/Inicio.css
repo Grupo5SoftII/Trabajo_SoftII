@@ -35,3 +35,22 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+/* Top login buttons */
+.inicio-login-btn {
+  position: fixed;
+  top: 16px;
+  z-index: 1050;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+.inicio-login-btn.left {
+  left: 16px;
+}
+.inicio-login-btn.right {
+  right: 16px;
+}
+
+@media (max-width: 480px) {
+  .inicio-login-btn { padding: 6px 10px; font-size: 0.9rem; }
+}
