@@ -4,9 +4,9 @@ export class PictogramController {
   constructor(private facade: PictotapFacade) {}
 
   // Simula: GET /pictogramas
-  listarPictogramas() {
+  async listarPictogramas() {
     console.log(`(API) GET /pictogramas`);
-    const list = this.facade.listarPictogramas();
+    const list = await this.facade.listarPictogramas();
     console.log("(API) 200 OK ->", list, "\n");
     return list;
   }

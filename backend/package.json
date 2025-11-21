@@ -6,19 +6,23 @@
   "scripts": {
     "start": "tsx src/server.ts",
     "socket": "tsx src/socket.ts",
-    "demo": "tsx src/main.ts"
+    "demo": "tsx src/main.ts",
+    "db:init": "tsx src/scripts/initDb.ts"
   },
   "dependencies": {
     "@types/socket.io": "^3.0.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.19.2",
     "morgan": "^1.10.0",
+    "pg": "^8.16.3",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.6",
+    "@types/pg": "^8.15.6",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.0",
     "typescript": "^5.4.0"

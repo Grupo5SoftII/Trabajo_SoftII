@@ -4,9 +4,9 @@ export class AulaController {
   constructor(private facade: PictotapFacade) {}
 
   // Simula: POST /aulas/:aulaId/usuarios/:usuarioId
-  asignarUsuarioAAula(usuarioId: number, aulaId: number) {
+  async asignarUsuarioAAula(usuarioId: number, aulaId: number) {
     console.log(`(API) POST /aulas/${aulaId}/usuarios/${usuarioId}`);
-    this.facade.asignarUsuarioAAula(usuarioId, aulaId);
+    await this.facade.asignarUsuarioAAula(usuarioId, aulaId);
     console.log(`(API) 200 OK\n`);
   }
 }

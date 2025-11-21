@@ -1,67 +1,51 @@
-import { DatabaseSingleton } from "./infra/DatabaseSingleton.js";
 import {
-  InMemoryUsuarioRepo, InMemoryAulaRepo, InMemoryUsuarioAulaRepo,
-  InMemoryChatRepo, InMemoryPictogramaRepo, InMemoryMensajePictogramaRepo
-} from "./infra/Repositories.js";
+  PostgresAulaRepo,
+  PostgresChatRepo,
+  PostgresMensajePictogramaRepo,
+  PostgresPictogramaRepo,
+  PostgresUsuarioAulaRepo,
+  PostgresUsuarioRepo
+} from "./infra/PostgresRepositories.js";
 import { PictotapFacade } from "./services/PictotapFacade.js";
-import { Aula } from "./domain/Aula.js";
-import { Usuario } from "./domain/Usuario.js";
-import { Chat } from "./domain/Chat.js";
-import { Pictograma } from "./domain/Pictograma.js";
 import { AulaController } from "./controllers/AulaController.js";
 import { ChatController } from "./controllers/ChatController.js";
 import { PictogramController } from "./controllers/PictogramController.js";
+import { initDb } from "./infra/initDb.js";
 
-// 1) Singleton DB en memoria
-const db = DatabaseSingleton.getInstance();
+async function runDemo() {
+  await initDb();
 
-// 2) Seed mínimo (usuarios, aula, chat, pictogramas)
-db.usuarios.push(new Usuario(1, "Profe Ana", 34, "PROFESOR"));
-db.usuarios.push(new Usuario(2, "Luis", 8, "ALUMNO"));
-db.usuarios.push(new Usuario(3, "Mía", 9, "ALUMNO"));
+  const facade = new PictotapFacade(
+    new PostgresUsuarioRepo(),
+    new PostgresAulaRepo(),
+    new PostgresUsuarioAulaRepo(),
+    new PostgresChatRepo(),
+    new PostgresPictogramaRepo(),
+    new PostgresMensajePictogramaRepo()
+  );
 
-db.aulas.push(new Aula(10, "1ro Primaria A", "1ro", 1));
-db.chats.push(new Chat(100, "AULA", 10));
+  const aulaCtl = new AulaController(facade);
+  const chatCtl = new ChatController(facade);
+  const pictCtl = new PictogramController(facade);
 
-db.pictogramas.push(new Pictograma(1000, "https://picsum.photos/seed/saludo/64", "HOLA"));
-db.pictogramas.push(new Pictograma(1001, "https://picsum.photos/seed/baño/64", "BAÑO"));
-db.pictogramas.push(new Pictograma(1002, "https://picsum.photos/seed/agua/64", "AGUA"));
+  console.log("=== PICTOTAP DEMO (PostgreSQL) ===\n");
 
-// 3) Repos
-const usuarioRepo = new InMemoryUsuarioRepo(db);
-const aulaRepo = new InMemoryAulaRepo(db);
-const usuarioAulaRepo = new InMemoryUsuarioAulaRepo(db);
-const chatRepo = new InMemoryChatRepo(db);
-const pictogramaRepo = new InMemoryPictogramaRepo(db);
-const mensajeRepo = new InMemoryMensajePictogramaRepo(db);
+  await pictCtl.listarPictogramas();
 
-// 4) Facade
-const facade = new PictotapFacade(
-  usuarioRepo, aulaRepo, usuarioAulaRepo, chatRepo, pictogramaRepo, mensajeRepo
-);
+  await aulaCtl.asignarUsuarioAAula(2, 10);
+  await aulaCtl.asignarUsuarioAAula(3, 10);
+  await aulaCtl.asignarUsuarioAAula(2, 10); // repetido (no duplica)
 
-// 5) Controllers “simulados” (solo prints)
-const aulaCtl = new AulaController(facade);
-const chatCtl = new ChatController(facade);
-const pictCtl = new PictogramController(facade);
+  await chatCtl.enviarPictograma(100, 2, 1000); // Luis: HOLA
+  await chatCtl.enviarPictograma(100, 3, 1002); // Mia: AGUA
+  await chatCtl.enviarPictograma(100, 2, 1001); // Luis: BANO
 
-// —— DEMO DEL FLUJO (prints) —— //
-console.log("=== PICTOTAP DEMO (prints) ===\n");
+  await chatCtl.listarMensajes(100);
 
-// A) Listar pictogramas
-pictCtl.listarPictogramas();
+  console.log("\n=== FIN DEMO ===");
+}
 
-// B) Asignar alumnos al aula
-aulaCtl.asignarUsuarioAAula(2, 10);
-aulaCtl.asignarUsuarioAAula(3, 10);
-aulaCtl.asignarUsuarioAAula(2, 10); // repetido (no duplica)
-
-// C) Enviar pictogramas al chat del aula
-chatCtl.enviarPictograma(100, 2, 1000); // Luis: HOLA
-chatCtl.enviarPictograma(100, 3, 1002); // Mía: AGUA
-chatCtl.enviarPictograma(100, 2, 1001); // Luis: BAÑO
-
-// D) Listar mensajes del chat
-chatCtl.listarMensajes(100);
-
-console.log("\n=== FIN DEMO ===");
+runDemo().catch(err => {
+  console.error("Error en demo", err);
+  process.exit(1);
+});
