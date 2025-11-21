@@ -13,7 +13,7 @@ export default function Crear_alumno() {
     nombres: "",
     apellidos: "",
     edad: "",
-    tipoUsuario: "Alumno", // Tipo de usuario fijo
+    tipoUsuario: "ALUMNO", // Tipo de usuario fijo
     usuario: "",
     password: "",
     confirmPassword: "", // Solo estos dos campos

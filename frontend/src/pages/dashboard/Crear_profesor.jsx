@@ -13,7 +13,7 @@ export default function Crear_profesor() {
     nombres: "",
     apellidos: "",
     edad: "",
-    tipoUsuario: "Profesor", // Tipo de usuario fijo
+    tipoUsuario: "PROFESOR", // Tipo de usuario fijo
     usuario: "",
     password: "",
     confirmPassword: "", // Solo estos dos campos
