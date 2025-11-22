@@ -69,7 +69,7 @@ export class InMemoryUsuarioRepo implements UsuarioRepo {
   async getById(id: number) { return this.db.usuarios.find(u => u.id === id); }
   async add(data: Omit<Usuario, "id">) {
     const id = this.db.nextId(this.db.usuarios);
-    const usuario = new Usuario(id, data.nombre, data.apellidos, data.edad, data.tipo, data.usuario);
+    const usuario = new Usuario(id, data.nombre, data.apellidos, data.edad, data.tipo, data.usuario, data.contrasena);
     this.db.usuarios.push(usuario);
     return usuario;
   }

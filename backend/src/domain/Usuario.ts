@@ -4,7 +4,8 @@ export class Usuario {
     public nombre: string,
     public apellidos: string,
     public edad: number,
-    public tipo: string, // "PROFESOR" | "ALUMNO"
-    public usuario: string
+    public tipo: 'PROFESOR' | 'ALUMNO',
+    public usuario: string,
+    public contrasena: string 
   ) {}
 }
