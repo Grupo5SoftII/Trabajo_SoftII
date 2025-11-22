@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useLogin from '../hooks/useLogin';
 import './LoginForm.css';
 
-export default function LoginForm({ requiredRole = null }) {
+export default function LoginForm({ requiredRole = null, redirectTo = '/dashboard', onSuccess = null }) {
   const { login, loading, error: hookError } = useLogin();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,8 +20,17 @@ export default function LoginForm({ requiredRole = null }) {
         setError('Acceso restringido: se requiere rol ' + requiredRole);
         return;
       }
-      // On successful login, navigate to dashboard (adjust route as needed)
-      navigate('/dashboard');
+      // On successful login, call onSuccess callback if provided, otherwise navigate
+      if (typeof onSuccess === 'function') {
+        try {
+          onSuccess(user);
+        } catch (cbErr) {
+          console.error('onSuccess callback error', cbErr);
+          navigate(redirectTo);
+        }
+      } else {
+        navigate(redirectTo);
+      }
     } catch (e) {
       setError(e.message || 'Error en login');
       console.error(e);

@@ -78,8 +78,9 @@
 .chat-panel {
     position: fixed;
     left: 0;
-    top: 0;
-    bottom: 0;
+    /* keep below the fixed header (64px) and add small gap */
+    top: calc(64px + 16px);
+    bottom: 16px;
     width: 340px;
     background: #fff;
     border-radius: 0 12px 12px 0;
@@ -189,7 +190,7 @@
 .pictogram-scroll-btn:active{ transform:translateY(-50%) scale(0.95); }
 
 @media (max-width:575px){
-  .chat-panel{ left:0; right:0; bottom:0; width:100%; height:48vh; border-radius:12px 12px 0 0; }
+    .chat-panel{ left:0; right:0; bottom:0; width:100%; height:48vh; top: auto; border-radius:12px 12px 0 0; }
 }
 
 @media (max-width:575px){

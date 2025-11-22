@@ -1,16 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useLogin from "../../hooks/useLogin";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Inicio.css";
 
 export default function Inicio() {
   const [codigo, setCodigo] = useState("");
   const navigate = useNavigate();
+  const { user } = useLogin();
 
   const handleCodigoChange = (e) => setCodigo(e.target.value);
 
   const ingresarClase = () => {
     if (codigo.length === 4) {
+      const role = (user && (user.tipo || user.role || "")).toString().toUpperCase();
+      if (role !== "ALUMNO") {
+        alert("Solo usuarios con rol ALUMNO pueden unirse a una reunión desde aquí. Por favor inicie sesión como alumno.");
+        navigate('/login/alumno');
+        return;
+      }
       navigate(`/room/${codigo}`);
     }
   };

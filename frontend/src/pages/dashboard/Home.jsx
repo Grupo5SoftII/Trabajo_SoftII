@@ -6,7 +6,7 @@ import SearchBar from "../../components/SearchBar";
 import { useRadialWindow } from "../../hooks/useRadialWindow";
 import "./Home.css";
 
-export default function Home() {
+export default function Home({ roomId = null, socket = null }) {
   const navigate = useNavigate();
 
   const [selectedCat, setSelectedCat] = useState(null);
@@ -27,11 +27,18 @@ export default function Home() {
   const handleLogout = () => console.log("Cerrando sesión...");
   const handleEmergency = () => console.log("🚨 EMERGENCIA 🚨");
 
+  // If rendered inside a room, show a small banner with the room code
+  const inRoom = !!roomId;
+
   return (
     <div className="layout">
       
       {/* --- 1. BANNER SUPERIOR (NUEVO) --- */}
-      <div className="top-banner"></div>
+      <div className="top-banner">
+        {inRoom && (
+          <div className="alert alert-info m-0 text-center py-2">Conectado a la reunión: <strong>{roomId}</strong></div>
+        )}
+      </div>
 
       {/* --- ELEMENTOS FLOTANTES --- */}
       <div className="user-image-placeholder">

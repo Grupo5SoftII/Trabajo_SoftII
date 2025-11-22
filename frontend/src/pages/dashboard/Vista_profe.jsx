@@ -7,14 +7,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Vista_profe.css";
 
-export default function Vista_profe() {
+export default function Vista_profe({ Nombre_clase: Nombre_clase_prop, studentCount, socket }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [menuOpen, setmenuOpen] = useState(true);
   const [openChat, setOpenChat] = useState(null);
   const [messagesById, setMessagesById] = useState({});
   const location = useLocation(); 
   const navigate = useNavigate();
-  const Nombre_clase = location.state?.Nombre_clase || "Clase sin nombre";
+  const Nombre_clase = Nombre_clase_prop || location.state?.Nombre_clase || "Clase sin nombre";
 
   const { data: pictos, loading: pictoLoading, error: pictoError } =
     useArasaacSearch(searchTerm, "es");
@@ -65,7 +65,7 @@ export default function Vista_profe() {
         >
           {menuOpen ? "Ocultar chats" : "Mostrar chats"}
         </button>
-        <h1 className="m-0 text-white">{Nombre_clase}</h1>
+        <h1 className="m-0 text-white">{Nombre_clase} {typeof studentCount === 'number' ? `- Alumnos: ${studentCount}` : ''}</h1>
         <button className="btn btn-outline-light ms-auto" onClick={cerrar_clase}>
           Cerrar clase
         </button>
