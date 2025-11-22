@@ -1,13 +1,44 @@
-import React, { useState } from "react";
+import SearchBar from "../../components/SearchBar"; 
+import useArasaacSearch from "../../hooks/useArasaacSearch";
+import PictogramCard from "../../components/PictogramCard";
+import ChatPanel from "../../components/ChatPanel";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Vista_profe.css";
 
 export default function Vista_profe() {
+  const [searchTerm, setSearchTerm] = useState("");
   const [menuOpen, setmenuOpen] = useState(true);
+  const [openChat, setOpenChat] = useState(null);
+  const [messagesById, setMessagesById] = useState({});
   const location = useLocation(); 
   const navigate = useNavigate();
   const Nombre_clase = location.state?.Nombre_clase || "Clase sin nombre";
+
+  const { data: pictos, loading: pictoLoading, error: pictoError } =
+    useArasaacSearch(searchTerm, "es");
+
+  const pictosRef = useRef(null);
+
+  const scrollPictos = (dir = 'right') => {
+    const el = pictosRef.current;
+    if (!el) return;
+    const amount = Math.round(el.clientWidth * 0.7) || 200;
+    el.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
+  };
+
+
+  useEffect(() => {
+    if (openChat) {
+      setMessagesById((prev) => {
+        if (prev[openChat.id]) return prev;
+          const initial = [
+          ];
+        return { ...prev, [openChat.id]: initial };
+      });
+    }
+  }, [openChat]);
 
   const cerrar_clase = () => {
     navigate("/crear_clase");
@@ -50,6 +81,7 @@ export default function Vista_profe() {
                   <button
                     className="btn btn-outline-primary w-100 text-start"
                     style={{ borderRadius: "8px" }}
+                    onClick={() => setOpenChat(item)}
                   >
                     {item.nombre}
                   </button>
@@ -77,6 +109,61 @@ export default function Vista_profe() {
               ))}
             </div>
           </div>
+
+          {openChat && (
+            <div className="chat-panel" role="dialog" aria-label={`Chat con ${openChat.nombre}`}>
+              <ChatPanel
+                title={openChat.nombre}
+                messages={messagesById[openChat.id] || []}
+                onClose={() => setOpenChat(null)}
+              />
+              <div className="chat-footer p-3">
+                <div className="chat-pictograms mb-2">
+                  {pictoLoading && <div className="small">Buscando pictogramas…</div>}
+                  {pictoError && <div className="small text-danger">Error cargando pictogramas</div>}
+                  <div className="pictos-grid d-flex" ref={pictosRef}>
+                    {(pictos || []).slice(0, 12).map((p) => {
+                      const id = p.id;
+                      const title = p.keywords?.[0] ?? id;
+                      const src = `https://api.arasaac.org/api/pictograms/${id}?download=false`;
+                      return (
+                        <PictogramCard
+                          key={id}
+                          title={title}
+                          src={src}
+                          onClick={() => {
+                            if (!openChat) return;
+                            setMessagesById((prev) => {
+                              const prevMsgs = prev[openChat.id] || [];
+                              const next = [...prevMsgs, { id: Date.now(), sender: "teacher", type: "img", src }];
+                              return { ...prev, [openChat.id]: next };
+                            });
+                          }}
+                        />
+                      );
+                    })}
+                    {!pictoLoading && (!pictos || pictos.length === 0) && (
+                      <div className="small text-muted">Sin resultados</div>
+                    )}
+                  </div>
+                  {(pictos && pictos.length > 3) && (
+                    <>
+                      <button className="pictogram-scroll-btn left" aria-hidden onClick={() => scrollPictos('left')}>{'‹'}</button>
+                      <button className="pictogram-scroll-btn right" aria-hidden onClick={() => scrollPictos('right')}>{'›'}</button>
+                    </>
+                  )}
+                </div>
+                <div className="chat-search-bar mb-2">
+                  <SearchBar
+                    placeholder="Buscar pictograma…"
+                    onSearch={(term) => {
+                      setSearchTerm(term);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
