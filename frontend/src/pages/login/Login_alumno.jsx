@@ -12,7 +12,7 @@ export default function LoginAlumno() {
   return (
     <div className="login-page">
       <h1 className="login-title">Bienvenido, Alumno</h1>
-      <LoginForm />
+      <LoginForm requiredRole="ALUMNO" />
 
       <div style={{ width: '100%', maxWidth: 420, marginTop: 12 }}>
         <button type="button" onClick={handleRegister}>

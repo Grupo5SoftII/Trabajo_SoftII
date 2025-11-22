@@ -12,10 +12,12 @@ import Room from "./pages/dashboard/Room";
 import Inicio from "./pages/dashboard/Inicio";
 import Crear_alumno from "./pages/dashboard/Crear_alumno";
 import Imagen_alumno from "./pages/dashboard/imagen_alumno";
+import AuthBar from "./components/AuthBar";
 
 function App() {
   return (
     <Router>
+      <AuthBar />
       <Routes>
         <Route path="/login/profesor" element={<Login_profesor />} />
         <Route path="/login/alumno" element={<Login_alumno />} />

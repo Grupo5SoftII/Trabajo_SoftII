@@ -13,6 +13,7 @@ import {
   PostgresUsuarioAulaRepo,
   PostgresUsuarioRepo
 } from "./infra/PostgresRepositories.js";
+import { pool } from "./infra/PostgresClient.js";
 import { PictotapFacade } from "./services/PictotapFacade.js";
 import { initDb } from "./infra/initDb.js";
 
@@ -55,6 +56,30 @@ async function bootstrap() {
         "DELETE /chats/:chatId/mensajes/:mensajeId"
       ]
     });
+  });
+  
+  // Login endpoint. Verifies username + contrasena and optionally enforces a role (profesor/alumno)
+  app.post("/login", async (req: Request, res: Response) => {
+    try {
+      const { username, password, role } = req.body;
+      if (!username || !password) return res.status(400).json({ ok: false, error: "Username y password requeridos" });
+
+      const q = `SELECT id, nombre, apellidos, edad, tipo, usuario FROM usuarios WHERE usuario = $1 AND contrasena = $2 LIMIT 1`;
+      const { rows } = await pool.query(q, [username, password]);
+      const user = rows[0];
+      if (!user) return res.status(401).json({ ok: false, error: "Credenciales invalidas" });
+
+      if (role) {
+        if ((user.tipo || '').toUpperCase() !== String(role).toUpperCase()) {
+          return res.status(403).json({ ok: false, error: `Acceso solo para ${role}` });
+        }
+      }
+
+      // devolver usuario (sin contrasena)
+      return res.json({ ok: true, user });
+    } catch (e: any) {
+      res.status(500).json({ ok: false, error: e.message });
+    }
   });
 
   // Inscripciones

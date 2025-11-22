@@ -1,5 +1,5 @@
 // api/auth.js
-const API_BASE = 'http://tu-backend.com'; // URL de tu backend
+const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:3001';
 
 export async function loginUser({ username, password }) {
   const res = await fetch(`${API_BASE}/login`, {
@@ -8,7 +8,12 @@ export async function loginUser({ username, password }) {
     body: JSON.stringify({ username, password }),
   });
 
-  if (!res.ok) throw new Error('Login fallido');
+  const payload = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = payload?.error || 'Login fallido';
+    throw new Error(msg);
+  }
 
-  return await res.json(); // token, info del usuario, etc.
+  // El backend devuelve { ok: true, user }
+  return payload.user || payload;
 }
