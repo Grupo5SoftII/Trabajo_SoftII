@@ -1,87 +1,100 @@
--- Limpieza inicial
-DROP TABLE IF EXISTS mensajes CASCADE;
-DROP TABLE IF EXISTS usuario_aula CASCADE;
-DROP TABLE IF EXISTS pictogramas CASCADE;
-DROP TABLE IF EXISTS chats CASCADE;
-DROP TABLE IF EXISTS aulas CASCADE;
-DROP TABLE IF EXISTS usuarios CASCADE;
-
--- 1. Tabla Usuarios con CONTRASEÑA
-CREATE TABLE usuarios (
-  id SERIAL PRIMARY KEY,
-  nombre VARCHAR(120) NOT NULL,
-  apellidos VARCHAR(120) NOT NULL,
-  edad INTEGER NOT NULL CHECK (edad >= 0),
-  tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('PROFESOR', 'ALUMNO')),
-  usuario VARCHAR(50) NOT NULL UNIQUE,
-  contrasena VARCHAR(255) NOT NULL 
+-- 1. Crear la tabla de USUARIOS
+CREATE TABLE Usuario (
+    usuario_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    edad INT,
+    tipo VARCHAR(50) NOT NULL,
+    contraseña VARCHAR(255) NOT NULL
 );
 
--- 2. Resto de tablas (Igual que antes)
-CREATE TABLE aulas (
-  id SERIAL PRIMARY KEY,
-  nombre VARCHAR(120) NOT NULL,
-  grado VARCHAR(30) NOT NULL,
-  profesor_encargado INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE RESTRICT
+-- 2. Crear la tabla de PICTOGRAMAS
+CREATE TABLE Pictograma (
+    pictograma_id SERIAL PRIMARY KEY,
+    nombrePictograma VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE chats (
-  id SERIAL PRIMARY KEY,
-  tipo VARCHAR(20) NOT NULL CHECK (tipo = 'AULA'),
-  aula_id INTEGER NOT NULL REFERENCES aulas(id) ON DELETE CASCADE
+-- 3. Crear la tabla AULA
+CREATE TABLE Aula (
+    aula_id SERIAL PRIMARY KEY,
+    codigoAula INTEGER UNIQUE NOT NULL,
+    materia VARCHAR(100),
+    grado VARCHAR(50),
+    usuario_id INT NOT NULL,
+
+    CONSTRAINT fk_aula_usuario FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 );
 
-CREATE TABLE pictogramas (
-  id SERIAL PRIMARY KEY,
-  url TEXT NOT NULL,
-  titulo VARCHAR(120) NOT NULL
+-- 4. Crear la tabla intermedia USUARIO_AULA
+CREATE TABLE Usuario_aula (
+    usuario_aula_id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    aula_id INT NOT NULL,
+
+    CONSTRAINT fk_ua_usuario FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id),
+    CONSTRAINT fk_ua_aula FOREIGN KEY (aula_id) REFERENCES Aula(aula_id)
 );
 
-CREATE TABLE usuario_aula (
-  id SERIAL PRIMARY KEY,
-  usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-  aula_id INTEGER NOT NULL REFERENCES aulas(id) ON DELETE CASCADE,
-  UNIQUE (usuario_id, aula_id)
+-- 5. Crear la tabla CHAT
+CREATE TABLE Chat (
+    chat_id SERIAL PRIMARY KEY,
+    aula_id INT NOT NULL,
+    CONSTRAINT fk_chat_aula FOREIGN KEY (aula_id) REFERENCES Aula(aula_id)
 );
 
-CREATE TABLE mensajes (
-  id SERIAL PRIMARY KEY,
-  fecha TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  emisor_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-  chat_id INTEGER NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
-  pictograma_id INTEGER NOT NULL REFERENCES pictogramas(id)
+-- 6. Crear la tabla MENSAJE
+CREATE TABLE Mensaje (
+    mensaje_id SERIAL PRIMARY KEY,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_id INT NOT NULL,
+    chat_id INT NOT NULL,
+    pictograma_id INT NOT NULL,
+    
+    CONSTRAINT fk_msj_usuario FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id),
+    CONSTRAINT fk_msj_chat FOREIGN KEY (chat_id) REFERENCES Chat(chat_id),
+    CONSTRAINT fk_msj_picto FOREIGN KEY (pictograma_id) REFERENCES Pictograma(pictograma_id)
 );
+-- ==========================================================================================================
 
--- 3. Seed ACTUALIZADO (Ahora incluimos contraseñas)
-INSERT INTO usuarios (id, nombre, apellidos, edad, tipo, usuario, contrasena) VALUES
-  (1, 'Ana', 'García', 34, 'PROFESOR', 'profe.ana', '123456'),
-  (2, 'Luis', 'Pérez', 8, 'ALUMNO', 'luisito2025', '123456'),
-  (3, 'Mia', 'López', 9, 'ALUMNO', 'mia.lopez', '123456')
-ON CONFLICT (id) DO NOTHING;
+-- 1. Insertar USUARIOS
+INSERT INTO Usuario (nombre, apellido, edad, tipo, contraseña) VALUES 
+('Álvaro', 'Alayo', 28, 'profesor', 'alayoalvaro'),
+('Micaela', 'Odria', 28, 'profesor', 'odriamerino'),
+('Manuel', 'Revilla', 8, 'alumno', 'revillamanuel'),
+('Kennett', 'Coca', 7, 'alumno', 'cocakennett');
 
-INSERT INTO aulas (id, nombre, grado, profesor_encargado) VALUES
-  (10, '1ro Primaria A', '1ro', 1)
-ON CONFLICT (id) DO NOTHING;
+-- 2. Insertar PICTOGRAMAS
+INSERT INTO Pictograma (nombrePictograma) VALUES 
+('Hola'),
+('Adios'),
+('Si'),
+('No'),
+('Baño'),
+('Jugar'),
+('Comer'),
+('Feliz');
 
-INSERT INTO chats (id, tipo, aula_id) VALUES
-  (100, 'AULA', 10)
-ON CONFLICT (id) DO NOTHING;
+-- 3. Insertar AULAS
+INSERT INTO Aula (codigoAula, materia, grado, usuario_id) VALUES 
+(101, 'Matemáticas', '2do Grado', 1),
+(102, 'Arte', '2do Grado', 2); 
 
-INSERT INTO pictogramas (id, url, titulo) VALUES
-  (1000, 'https://picsum.photos/seed/saludo/64', 'HOLA'),
-  (1001, 'https://picsum.photos/seed/bano/64', 'BANO'),
-  (1002, 'https://picsum.photos/seed/agua/64', 'AGUA')
-ON CONFLICT (id) DO NOTHING;
+-- 4. Inscribir ALUMNOS en Aulas (Tabla Usuario_aula)
+INSERT INTO Usuario_aula (usuario_id, aula_id) VALUES 
+(3, 1),
+(4, 1);
 
-INSERT INTO usuario_aula (id, usuario_id, aula_id) VALUES
-  (1, 2, 10),
-  (2, 3, 10)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO Usuario_aula (usuario_id, aula_id) VALUES 
+(4, 2);
 
--- 4. Ajustar secuencias
-SELECT setval(pg_get_serial_sequence('usuarios', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM usuarios), 0), 1));
-SELECT setval(pg_get_serial_sequence('aulas', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM aulas), 0), 1));
-SELECT setval(pg_get_serial_sequence('chats', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM chats), 0), 1));
-SELECT setval(pg_get_serial_sequence('pictogramas', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM pictogramas), 0), 1));
-SELECT setval(pg_get_serial_sequence('usuario_aula', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM usuario_aula), 0), 1));
-SELECT setval(pg_get_serial_sequence('mensajes', 'id'), GREATEST(COALESCE((SELECT MAX(id) FROM mensajes), 0), 1));
+-- 5. Crear los CHATS para las aulas
+INSERT INTO Chat (aula_id) VALUES 
+(1),
+(2);
+
+-- 6. Insertar MENSAJES de prueba
+INSERT INTO Mensaje (usuario_id, chat_id, pictograma_id) VALUES 
+(3, 1, 1),
+(1, 1, 1),
+(4, 1, 8),
+(3, 1, 5);

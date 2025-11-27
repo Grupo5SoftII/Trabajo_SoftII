@@ -10,11 +10,21 @@ import { PictotapFacade } from "./services/PictotapFacade.js";
 import { AulaController } from "./controllers/AulaController.js";
 import { ChatController } from "./controllers/ChatController.js";
 import { PictogramController } from "./controllers/PictogramController.js";
-import { initDb } from "./infra/initDb.js";
+import pool from './infra/db.js'; // Usamos la conexión correcta
 
 async function runDemo() {
-  await initDb();
+  console.log("--- INICIANDO DEMO CON AZURE ---");
 
+  // 1. Verificar conexión
+  try {
+      const res = await pool.query('SELECT NOW()');
+      console.log('✅ Base de datos conectada. Hora servidor:', res.rows[0].now);
+  } catch(e) {
+      console.error("❌ Error fatal de conexión:", e);
+      return;
+  }
+
+  // 2. Inicializar Facade con los Repositorios de Postgres
   const facade = new PictotapFacade(
     new PostgresUsuarioRepo(),
     new PostgresAulaRepo(),
@@ -28,21 +38,30 @@ async function runDemo() {
   const chatCtl = new ChatController(facade);
   const pictCtl = new PictogramController(facade);
 
-  console.log("=== PICTOTAP DEMO (PostgreSQL) ===\n");
+  // USAMOS IDs REALES (Basado en tu script SQL inicial)
+  // Usuario 3: Manuel (Alumno)
+  // Aula 1: Matemáticas
+  // Chat 1: Chat de Matemáticas
+  // Pictograma 1: Hola
 
+  console.log("\n1. Listando Pictogramas existentes...");
   await pictCtl.listarPictogramas();
 
-  await aulaCtl.asignarUsuarioAAula(2, 10);
-  await aulaCtl.asignarUsuarioAAula(3, 10);
-  await aulaCtl.asignarUsuarioAAula(2, 10); // repetido (no duplica)
+  console.log("\n2. Inscribiendo alumno Manuel (ID 3) en Aula (ID 1)...");
+  try {
+    await aulaCtl.asignarUsuarioAAula(3, 1);
+  } catch (error) {
+    console.log("   (El alumno ya estaba inscrito o hubo un error controlado)");
+  }
 
-  await chatCtl.enviarPictograma(100, 2, 1000); // Luis: HOLA
-  await chatCtl.enviarPictograma(100, 3, 1002); // Mia: AGUA
-  await chatCtl.enviarPictograma(100, 2, 1001); // Luis: BANO
+  console.log("\n3. Manuel envía 'Hola' (ID 1) al chat (ID 1)...");
+  await chatCtl.enviarPictograma(1, 3, 1); 
 
-  await chatCtl.listarMensajes(100);
+  console.log("\n4. Historial del Chat:");
+  await chatCtl.listarMensajes(1);
 
-  console.log("\n=== FIN DEMO ===");
+  console.log("\n=== FIN DEMO EXITOSA ===");
+  process.exit(0);
 }
 
 runDemo().catch(err => {

@@ -1,8 +1,9 @@
 export class Aula {
   constructor(
     public id: number,
-    public nombre: string,
+    public codigo: number,
+    public materia: string,
     public grado: string,
-    public profesorEncargado: number
+    public profesorId: number 
   ) {}
 }

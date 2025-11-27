@@ -26,5 +26,10 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.0",
     "typescript": "^5.4.0"
-  }
+  },
+  "description": "Backend en TypeScript con repositorios contra PostgreSQL. El chat usa pictogramas; cada mensaje guarda el `pictogramaId` y todas las operaciones del backend persisten en la BD.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
