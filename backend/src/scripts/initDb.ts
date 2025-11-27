@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { initDb } from "../infra/initDb.js";
-import { pool } from "../infra/PostgresClient.js";
+import pool from "../infra/db.js";
 
 // Script para inicializar la base de datos
 initDb()

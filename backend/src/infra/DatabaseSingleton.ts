@@ -8,7 +8,6 @@ import { MensajePictograma } from "../domain/MensajePictograma.js";
 export class DatabaseSingleton {
   private static instance: DatabaseSingleton;
 
-  // “Tablas” en memoria
   public usuarios: Usuario[] = [];
   public aulas: Aula[] = [];
   public usuarioAula: UsuarioAula[] = [];

@@ -14,7 +14,6 @@ import {
   PostgresUsuarioRepo
 } from "./infra/PostgresRepositories.js";
 
-// IMPORTANTE: Usamos db.js que es el correcto
 import pool from "./infra/db.js"; 
 
 import { PictotapFacade } from "./services/PictotapFacade.js";
@@ -89,8 +88,7 @@ async function bootstrap() {
   app.get("/usuarios/:id", async (req, res) => res.json(await facade.obtenerUsuario(Number(req.params.id))));
   
   app.post("/usuarios", async (req, res) => {
-    try { 
-        // Solo enviamos lo que la nueva clase Usuario espera
+    try {
         const nuevo = await facade.crearUsuario({ 
             nombre: req.body.nombre,
             apellido: req.body.apellido,
@@ -106,8 +104,7 @@ async function bootstrap() {
   app.get("/aulas", async (_req, res) => res.json(await facade.listarAulas()));
   
   app.post("/aulas", async (req, res) => {
-    try { 
-        // Ajustamos para enviar profesorId
+    try {
         const nuevo = await facade.crearAula({ 
             materia: req.body.materia,
             grado: req.body.grado,
@@ -124,7 +121,6 @@ async function bootstrap() {
   
   app.post("/pictogramas", async (req, res) => {
       try {
-          // Solo enviamos nombre, ya no URL
           const nuevo = await facade.crearPictograma({ nombre: req.body.nombre });
           res.status(201).json(nuevo);
       } catch (e: any) { res.status(400).json({ ok: false, error: e.message }); }

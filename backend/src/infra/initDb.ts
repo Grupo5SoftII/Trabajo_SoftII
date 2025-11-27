@@ -2,7 +2,7 @@ import "dotenv/config";
 import { readFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { pool } from "./PostgresClient.js";   // o "./PostgresClient" según tu config
+import pool from "./db.js";
 
 export async function initDb() {
   const __filename = fileURLToPath(import.meta.url);
