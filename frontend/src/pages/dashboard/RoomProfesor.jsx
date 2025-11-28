@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { API_BASE } from "../../api/config";
 import useLogin from "../../hooks/useLogin";
+import PictoView from "../../components/PictoView";
 import "./RoomProfesor.css";
 
 export default function RoomProfesor({ roomId }) {
@@ -29,12 +30,31 @@ export default function RoomProfesor({ roomId }) {
 
     // 2. Escuchar cuando alguien entra
     newSocket.on('user_joined', (data) => {
-      // data.user contiene la info del alumno
-      if (data.user && data.user.id !== user.id) {
-        setActiveStudents(prev => new Set(prev).add(data.user.nombre || "Alumno"));
-      }
-    });
+      // A. Identificar IDs
+      const incomingId = data.user?.id || data.userId;
+      const myId = user?.id;
 
+      // B. FILTRO DE SEGURIDAD: 
+      if (incomingId == myId) return;
+
+      console.log("📢 ALGUIEN SE UNIÓ:", data);
+      
+      // C. Obtener el nombre real (prioridad: nombre > usuario > "Estudiante")
+      const studentName = data.user?.nombre || data.user?.usuario || "Estudiante";
+
+      // D. Actualizar contador de alumnos únicos
+      setActiveStudents(prev => new Set(prev).add(studentName));
+
+      // E. Mostrar tarjeta SOLO si pasó el filtro (es decir, es un alumno real)
+      setMessages((prev) => [...prev, {
+        id: Date.now(),
+        time: new Date(),
+        studentName: "SISTEMA", 
+        type: 'JOIN',           
+        payload: `${studentName} se ha unido a la clase.`
+      }]);
+    });
+    
     // 3. Escuchar mensajes (Pictogramas o Emergencias)
     newSocket.on('receive_message', (data) => {
       try {
@@ -114,7 +134,10 @@ export default function RoomProfesor({ roomId }) {
             {messages.map((msg) => (
               <div 
                 key={msg.id} 
-                className={`interaction-card ${msg.type === 'EMERGENCIA' ? 'card-emergency' : 'card-picto'}`}
+                className={`interaction-card ${
+                  msg.type === 'EMERGENCIA' ? 'card-emergency' : 
+                  msg.type === 'JOIN' ? 'card-join' : 'card-picto'
+                }`}
               >
                 <div className="card-top">
                   <span className="student-name">{msg.studentName}</span>
@@ -124,15 +147,26 @@ export default function RoomProfesor({ roomId }) {
                 </div>
                 
                 <div className="card-content">
-                  {msg.type === 'EMERGENCIA' ? (
+                  {/* CASO 1: EMERGENCIA */}
+                  {msg.type === 'EMERGENCIA' && (
                     <>
                       <div className="siren-icon">🚨</div>
                       <div className="emergency-text">{msg.payload}</div>
                     </>
-                  ) : (
-                    <div className="picto-display">
-                      {/* Aquí mostramos el nombre del pictograma en grande */}
-                      {msg.payload}
+                  )}
+
+                  {/* CASO 2: UNIÓN (NUEVO) */}
+                  {msg.type === 'JOIN' && (
+                    <div className="join-text">
+                      👋 {msg.payload}
+                    </div>
+                  )}
+
+                  {/* CASO 3: PICTOGRAMA NORMAL */}
+                  {(msg.type !== 'EMERGENCIA' && msg.type !== 'JOIN') && (
+                    <div className="picto-display-wrapper">
+                       {/* Debe ser PictoView, NO un div con texto */}
+                       <PictoView term={msg.payload} />
                     </div>
                   )}
                 </div>

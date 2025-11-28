@@ -17,7 +17,6 @@ import Home from "./pages/dashboard/Home";
 // Componentes y Admin
 import AuthBar from "./components/AuthBar";
 import Administrador from "./pages/dashboard/Administrador";
-import ListaProfesores from "./pages/dashboard/ListaProfesores";
 import HistorialUltimasReuniones from "./pages/dashboard/HistorialUltimasReuniones";
 
 function App() {
@@ -48,7 +47,7 @@ function App() {
 
         {/* --- ADMIN --- */}
         <Route path="/admin" element={<Administrador />} />
-        <Route path="/admin/profesores" element={<ListaProfesores />} />
+        {/* <Route path="/admin/profesores" element={<ListaProfesores />} /> <-- BORRADO */}
         <Route path="/admin/reuniones" element={<HistorialUltimasReuniones />} />
 
       </Routes>
