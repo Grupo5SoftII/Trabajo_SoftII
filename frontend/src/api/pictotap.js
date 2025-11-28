@@ -1,6 +1,4 @@
-// API client for pictotap backend
-
-const API_BASE = 'http://localhost:3001';
+import { API_BASE } from './config';
 
 // Pictogramas
 export async function getPictogramas() {

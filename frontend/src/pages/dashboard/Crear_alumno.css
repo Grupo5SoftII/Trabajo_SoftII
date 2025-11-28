@@ -1,98 +1,159 @@
-.header {
-  height: 64px;
-  background: linear-gradient(90deg, #01ffaf, #6610f2);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
-
-.CrearAlumno {
-  min-height: 100vh;
-  background: #f4f5fb;
-}
-
-.layout {
-  margin-top: 64px;
-}
-
-.menu {
-  width: 230px;
-  min-height: calc(100vh - 64px);
-  border-right: 1px solid #ddd;
-  transition: width 0.3s ease;
-}
-
-.menu.closed {
-  width: 0;
-  overflow: hidden;
-}
-
-.base {
-  flex: 1;
-  min-height: calc(100vh - 64px);
-}
-
-.form-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 2.5rem 2.5rem 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  box-shadow: 0 10px 25px rgba(37, 50, 105, 0.08);
-  border: 1px solid rgba(102, 16, 242, 0.05);
-}
-
-.form-card h2 {
-  font-weight: 700;
-  color: #333;
-}
-
-.form-label {
-  font-weight: 600;
-  color: #555;
-}
-
-.form-control-lg,
-.form-select-lg {
-  border-radius: 10px;
-  border: 1px solid #dfe3ea;
-  background: #f9fafc;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.form-control-lg:focus,
-.form-select-lg:focus {
-  border-color: #6610f2;
-  background: #fff;
-  box-shadow: 0 0 0 0.1rem rgba(102, 16, 242, 0.15);
-}
-
-.btn-primary {
-  background: linear-gradient(90deg, #6610f2, #4f6cff);
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.btn-primary:hover {
-  filter: brightness(0.97);
-}
-
-/* Centrar el botón */
-.col-md-6.d-flex.align-items-end {
+/* Heredamos el fondo general */
+.kahoot-layout {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* Min-height para permitir scroll si el form es largo */
+  background: linear-gradient(135deg, #46178f 0%, #25076b 100%);
   display: flex;
-  justify-content: center; /* Centra el botón */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px 0;
 }
 
-@media (max-width: 992px) {
-  .form-card {
-    margin: 1rem;
-    padding: 1.5rem;
-  }
-  .menu.open {
-    width: 180px;
-  }
+/* Tarjeta más ancha para el formulario */
+.register-card {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px; /* Un poco más ancha que el login */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  border-top: 6px solid #1368ce; /* Azul estudiante */
+  position: relative;
+  z-index: 10;
 }
+
+.register-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  text-align: left;
+}
+
+/* Grupos del formulario */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Campos de mitad de ancho (Edad y Tipo) */
+.form-group.half {
+  width: calc(50% - 8px);
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* Inputs estilizados */
+.kahoot-input-field {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  background-color: #f9f9f9;
+  width: 100%;
+}
+
+.kahoot-input-field:focus {
+  border-color: #1368ce;
+  outline: none;
+  background-color: white;
+}
+
+.kahoot-input-field.readonly {
+  background-color: #e9ecef;
+  color: #666;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Botón de Crear */
+.form-actions {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.kahoot-btn-action {
+  width: 100%;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #111;
+  transition: transform 0.1s;
+}
+
+.kahoot-btn-action:hover:not(:disabled) {
+  background-color: #444;
+}
+
+.kahoot-btn-action:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.kahoot-btn-action:disabled {
+  background-color: #aaa;
+  box-shadow: none;
+  cursor: wait;
+}
+
+/* Mensaje de error */
+.error-badge {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #ef9a9a;
+}
+
+/* Reutilizamos clases del login para coherencia */
+.btn-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 20;
+}
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.pictotap-logo-small {
+  font-size: 2.5rem;
+  color: white;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  z-index: 10;
+}
+
+.login-heading { margin: 0; color: #333; font-weight: 800; font-size: 1.8rem; text-align: center; }
+.login-subtext { color: #666; margin-bottom: 20px; font-size: 0.95rem; text-align: center; }
+
+/* Formas geométricas */
+.shape { position: absolute; opacity: 0.1; z-index: 1; pointer-events: none; }
+.shape-circle { width: 300px; height: 300px; background: white; border-radius: 50%; bottom: -50px; left: -50px; }
+.shape-square { width: 200px; height: 200px; background: white; top: 100px; right: -50px; transform: rotate(45deg); }

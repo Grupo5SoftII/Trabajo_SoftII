@@ -1,56 +1,143 @@
-.inicio-container {
-  min-height: 100vh;
-  background-color: #f0f8ff;
-}
-
-.inicio-box {
+/* Fondo general estilo Kahoot */
+.kahoot-layout {
+  position: relative;
   width: 100%;
-  max-width: 500px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+  height: 100vh;
+  background: linear-gradient(135deg, #46178f 0%, #25076b 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h1 {
-  font-size: 2.5rem;
+/* Centro de la pantalla */
+.kahoot-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+}
+
+/* Logo Gigante */
+.pictotap-logo {
+  font-size: 5rem; /* Un poco más grande para impactar */
+  color: white;
+  text-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+  margin-bottom: 30px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+/* Tarjeta Blanca Central */
+.kahoot-card {
+  background: white;
+  padding: 40px;
+  border-radius: 12px; /* Bordes más redondeados */
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4); /* Sombra más pronunciada */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+.welcome-text {
+  margin: 0;
+  color: #333;
+  font-weight: 800;
+  font-size: 1.8rem;
+}
+
+.subtitle-text {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Botones de Rol */
+.kahoot-btn-role {
+  width: 100%;
+  padding: 18px;
+  font-size: 1.2rem;
   font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  transition: transform 0.1s, filter 0.2s;
 }
 
-label {
-  font-size: 1.5rem;
+.kahoot-btn-role:active {
+  transform: translateY(4px);
+  box-shadow: none;
 }
 
-input[type="text"] {
-  border-radius: 8px;
-  font-size: 1.5rem;
-  padding: 12px;
+.kahoot-btn-role:hover {
+  filter: brightness(1.1);
 }
 
-button {
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 1.5rem;
+/* Estilo específico Estudiante (Azul) */
+.btn-student {
+  background-color: #1368ce; /* Azul Kahoot */
+  color: white;
 }
 
-button:hover {
-  opacity: 0.9;
+/* Estilo específico Profesor (Verde o Gris oscuro) */
+.btn-teacher {
+  background-color: #333; /* Gris oscuro elegante */
+  color: white;
 }
 
-/* Top login buttons */
-.inicio-login-btn {
-  position: fixed;
-  top: 16px;
-  z-index: 1050;
-  padding: 8px 12px;
-  border-radius: 8px;
-}
-.inicio-login-btn.left {
-  left: 16px;
-}
-.inicio-login-btn.right {
-  right: 16px;
+.footer-text {
+  margin-top: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-@media (max-width: 480px) {
-  .inicio-login-btn { padding: 6px 10px; font-size: 0.9rem; }
+/* Decoración de fondo (Formas) */
+.shape {
+  position: absolute;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.shape-circle {
+  width: 300px;
+  height: 300px;
+  background: white;
+  border-radius: 50%;
+  bottom: -50px;
+  left: -50px;
+}
+
+.shape-square {
+  width: 200px;
+  height: 200px;
+  background: white;
+  top: 100px;
+  right: -50px;
+  transform: rotate(45deg);
+}
+
+.shape-triangle {
+  width: 0; 
+  height: 0; 
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 173px solid white;
+  top: 20%;
+  left: 10%;
+  transform: rotate(-15deg);
 }

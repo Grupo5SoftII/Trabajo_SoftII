@@ -1,57 +1,160 @@
-/* Styles for the Alumno login page (copied from Login.css) */
-.login-page {
-  min-height: 100vh;
+/* Heredamos el fondo morado vibrante */
+.kahoot-layout {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #46178f 0%, #25076b 100%);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background: linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);
-  padding: 32px 16px;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-  color: #0f172a;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.login-title {
-  font-size: 2rem;
-  margin: 0 0 18px 0;
-  font-weight: 700;
+/* Botón volver */
+.btn-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 20;
+  transition: background 0.2s;
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Logo un poco más pequeño que en el home */
+.pictotap-logo-small {
+  font-size: 3rem;
+  color: white;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* Tarjeta de Login */
+.login-card-student {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  text-align: center;
+  border-top: 6px solid #1368ce;
+}
+
+.login-heading {
+  margin: 0;
+  color: #333;
+  font-weight: 800;
+  font-size: 1.8rem;
+}
+
+.login-subtext {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.form-wrapper input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  background-color: #f9f9f9;
+}
+
+.form-wrapper input:focus {
+  border-color: #1368ce;
+  outline: none;
+  background-color: white;
+}
+
+/* Botón de Submit dentro del form */
+.form-wrapper button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #111;
+  margin-top: 10px;
+  transition: transform 0.1s;
+}
+
+.form-wrapper button[type="submit"]:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+/* Separador */
+.divider {
+  margin: 20px 0;
+  position: relative;
   text-align: center;
 }
 
-.login-page > form,
-.login-page > div {
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
   width: 100%;
-  max-width: 420px;
+  height: 1px;
+  background: #eee;
+  z-index: 1;
 }
 
-.login-page input[type="text"],
-.login-page input[type="password"],
-.login-page input[type="email"] {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
-  box-sizing: border-box;
+.divider span {
+  background: white;
+  padding: 0 10px;
+  color: #999;
+  position: relative;
+  z-index: 2;
+  font-size: 0.9rem;
 }
 
-.login-page button {
-  width: 100%;
-  padding: 12px 14px;
-  margin-top: 12px;
-  background-color: #0ea5e9;
+/* Enlace de registro */
+.btn-register-link {
+  background: none;
   border: none;
-  color: white;
-  border-radius: 10px;
-  font-weight: 600;
+  color: #1368ce;
   cursor: pointer;
+  font-size: 0.95rem;
+  text-decoration: none;
 }
 
-.login-page button:hover {
-  opacity: 0.95;
+.btn-register-link:hover {
+  text-decoration: underline;
 }
 
-@media (max-width: 480px) {
-  .login-title { font-size: 1.5rem; }
+/* Decoración (Mismas formas que Inicio) */
+.shape {
+  position: absolute;
+  opacity: 0.1;
+  z-index: 1;
+}
+.shape-circle {
+  width: 300px; height: 300px; background: white; border-radius: 50%; bottom: -50px; left: -50px;
+}
+.shape-square {
+  width: 200px; height: 200px; background: white; top: 100px; right: -50px; transform: rotate(45deg);
 }

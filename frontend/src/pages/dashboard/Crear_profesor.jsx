@@ -1,179 +1,201 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../../api/config";
 import "./Crear_profesor.css";
 
 export default function Crear_profesor() {
-  const [menuOpen, setMenuOpen] = useState(true);
-  const location = useLocation();
   const navigate = useNavigate();
-  const Nombre_clase = location.state?.Nombre_clase || "Crear profesor";
 
   const [formData, setFormData] = useState({
-    nombres: "",
-    apellidos: "",
+    nombre: "",      // Usuario para login
+    apellido: "",
     edad: "",
-    tipoUsuario: "PROFESOR", // Tipo de usuario fijo
-    usuario: "",
+    tipoUsuario: "Profesor", // Visual
     password: "",
-    confirmPassword: "", // Solo estos dos campos
+    confirmPassword: "",
   });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const cerrar_clase = () => {
-    navigate("/crear_clase");
+  const handleBack = () => {
+    navigate("/login/profesor");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Validación para asegurarse de que las contraseñas coincidan
+    // 1. Validaciones
     if (formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden.");
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+    if (!formData.nombre.trim() || !formData.apellido.trim() || !formData.password.trim()) {
+      setError("Por favor completa todos los campos obligatorios.");
       return;
     }
 
-    console.log("Profesor creado:", formData);
+    setLoading(true);
+
+    try {
+      // 2. Payload para el Backend (Alineado con DB Azure)
+      const payload = {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        edad: parseInt(formData.edad) || 0,
+        tipo: "PROFESOR", // Valor fijo interno
+        contrasena: formData.password
+      };
+
+      // 3. Petición API
+      const res = await fetch(`${API_BASE}/usuarios`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Error al crear el profesor");
+      }
+
+      // 4. Éxito
+      alert("¡Cuenta de profesor creada! Ahora puedes iniciar sesión.");
+      navigate("/login/profesor");
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="CrearProfesor">
-      {/* HEADER */}
-      <header className="header d-flex align-items-center px-3">
-        <button
-          className="btn btn-outline-light me-3"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Ocultar menú" : "Mostrar menú"}
-        >
-          {menuOpen ? "Ocultar menú" : "Mostrar menú"}
-        </button>
-        <h1 className="m-0 text-white">{Nombre_clase}</h1>
-        <button className="btn btn-outline-light ms-auto" onClick={cerrar_clase}>
-          Volver
-        </button>
-      </header>
+    <div className="kahoot-layout">
+      {/* Botón volver */}
+      <button className="btn-back" onClick={handleBack}>
+        ← Volver
+      </button>
 
-      {/* LAYOUT */}
-      <div className="layout d-flex">
-        <aside className={`menu bg-light ${menuOpen ? "open" : "closed"}`}>
-          <nav className="p-3">
-            <h5 className="fw-bold mb-3">Opciones</h5>
-            <ul className="list-unstyled">
-              <li className="mb-2">
-                <button className="btn btn-outline-primary w-100 text-start">
-                  Lista de profesores
-                </button>
-              </li>
-              <li className="mb-2">
-                <button className="btn btn-outline-primary w-100 text-start">
-                  Crear profesor
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </aside>
+      <main className="kahoot-center">
+        <h1 className="pictotap-logo-small">PICTOTAP</h1>
 
-        <main className="base p-4">
-          <div className="form-card">
-            <h2 className="mb-4">Registrar nuevo profesor</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="row g-3">
-                <div className="col-md-6">
-                  <label className="form-label">Nombres</label>
-                  <input
-                    type="text"
-                    name="nombres"
-                    className="form-control form-control-lg"
-                    value={formData.nombres}
-                    onChange={handleChange}
-                    placeholder="Ej. Álvaro Gabriel"
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Apellidos</label>
-                  <input
-                    type="text"
-                    name="apellidos"
-                    className="form-control form-control-lg"
-                    value={formData.apellidos}
-                    onChange={handleChange}
-                    placeholder="Ej. Alayo Barbarán"
-                    required
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Edad</label>
-                  <input
-                    type="number"
-                    name="edad"
-                    className="form-control form-control-lg"
-                    value={formData.edad}
-                    onChange={handleChange}
-                    min="3"
-                    placeholder="30"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Tipo de usuario</label>
-                  <input
-                    type="text"
-                    name="tipoUsuario"
-                    className="form-control form-control-lg"
-                    value={formData.tipoUsuario}
-                    readOnly // Campo inamovible
-                  />
-                </div>
-                <div className="col-md-4">
-                  <label className="form-label">Usuario</label>
-                  <input
-                    type="text"
-                    name="usuario"
-                    className="form-control form-control-lg"
-                    value={formData.usuario}
-                    onChange={handleChange}
-                    placeholder="Ej. Alvaro2802"
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Contraseña</label>
-                  <input
-                    type="password"
-                    name="password"
-                    className="form-control form-control-lg"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="********"
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Confirmar Contraseña</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    className="form-control form-control-lg"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="********"
-                    required
-                  />
-                </div>
-                <div className="col-md-6 d-flex align-items-end">
-                  <button type="submit" className="btn btn-primary btn-lg w-100">
-                    Crear profesor
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </main>
-      </div>
+        <div className="kahoot-card register-card-teacher">
+          <h2 className="login-heading">Nuevo Docente</h2>
+          <p className="login-subtext">Crea tu cuenta para gestionar clases</p>
+
+          {error && <div className="error-badge">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="register-form-grid">
+            
+            {/* NOMBRE */}
+            <div className="form-group">
+              <label>Nombre (Usuario)</label>
+              <input
+                type="text"
+                name="nombre"
+                className="kahoot-input-field"
+                value={formData.nombre}
+                onChange={handleChange}
+                placeholder="Ej. Álvaro"
+                required
+              />
+            </div>
+
+            {/* APELLIDO */}
+            <div className="form-group">
+              <label>Apellido</label>
+              <input
+                type="text"
+                name="apellido"
+                className="kahoot-input-field"
+                value={formData.apellido}
+                onChange={handleChange}
+                placeholder="Ej. Alayo"
+                required
+              />
+            </div>
+
+            {/* EDAD */}
+            <div className="form-group half">
+              <label>Edad</label>
+              <input
+                type="number"
+                name="edad"
+                className="kahoot-input-field"
+                value={formData.edad}
+                onChange={handleChange}
+                placeholder="30"
+                min="18"
+              />
+            </div>
+
+            {/* TIPO (Solo lectura) */}
+            <div className="form-group half">
+              <label>Perfil</label>
+              <input
+                type="text"
+                name="tipoUsuario"
+                className="kahoot-input-field readonly"
+                value="Profesor"
+                readOnly
+              />
+            </div>
+
+            {/* CONTRASEÑA */}
+            <div className="form-group">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                name="password"
+                className="kahoot-input-field"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="******"
+                required
+              />
+            </div>
+
+            {/* CONFIRMAR CONTRASEÑA */}
+            <div className="form-group">
+              <label>Confirmar Contraseña</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                className="kahoot-input-field"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="******"
+                required
+              />
+            </div>
+
+            {/* BOTÓN DE ACCIÓN */}
+            <div className="form-actions">
+              <button 
+                type="submit" 
+                className="kahoot-btn-action btn-teacher-action"
+                disabled={loading}
+              >
+                {loading ? "Registrando..." : "Crear Cuenta"}
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </main>
+
+      {/* Decoración */}
+      <div className="shape shape-circle"></div>
+      <div className="shape shape-square"></div>
     </div>
   );
 }

@@ -1,162 +1,159 @@
-:root {
-  --bg: #f5f7fb;
-  --ink: #111827;
-  --panel: #ffffff;
-  --teal-dark: #0f4c6b; /* Color azul oscuro del PPT */
-}
-
-.layout {
-  /* CONFIGURACIÓN ANTI-SCROLL */
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* Bloquea el scroll */
-  margin: 0;
-  
-  background:
-    radial-gradient(#e5e7eb 1px, transparent 1px) 0 0/20px 20px,
-    var(--bg);
+/* --- LAYOUT BASE --- */
+.kahoot-layout {
   position: relative;
-  color: var(--ink);
-  font-family: system-ui, -apple-system, sans-serif;
-  
-  /* Sin padding superior porque los elementos son absolutos */
-  padding-top: 0;
-  box-sizing: border-box;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #46178f 0%, #25076b 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
 }
 
-/* --- 1. BANNER SUPERIOR --- */
-.top-banner {
-  position: absolute;
+/* --- VISTA 2: ESTRUCTURA PRINCIPAL --- */
+.active-room-layout {
+  justify-content: flex-start;
+}
+
+/* Header Flotante */
+.active-header {
+  width: 100%;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  position: absolute; /* Header fijo arriba */
   top: 0;
   left: 0;
+}
+
+.room-badge { background: white; color: #333; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+.user-badge-small { display: flex; align-items: center; gap: 10px; color: white; font-weight: bold; }
+.avatar-circle { width: 32px; height: 32px; background: #1368ce; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+.btn-mini-logout { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+.btn-mini-logout:hover { background: rgba(255,255,255,0.4); }
+
+/* --- CONTENEDOR CENTRAL (SOLO MENÚ RADIAL) --- */
+.radial-wrapper {
   width: 100%;
-  height: 90px;
-  background-color: var(--teal-dark);
-  z-index: 100;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* --- 2. ELEMENTOS FLOTANTES (Esquinas) --- */
-
-/* Imagen de Usuario (Izquierda Arriba) */
-.user-image-placeholder {
-  position: absolute;
-  top: 20px; 
-  left: 24px;
-  width: 90px; 
-  height: 90px;
-  border-radius: 50%;
-  background-color: var(--teal-dark);
-  color: white;
+  height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 12px;
-  border: 3px solid white; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  z-index: 1100; 
-}
-
-/* Botón Cerrar Sesión (Derecha Arriba) */
-.logout-btn {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  padding: 10px 20px;
-  background-color: #ffe0b2; 
-  border: 2px solid #ffcc80;
-  border-radius: 8px;
-  font-weight: 700;
-  color: var(--teal-dark);
-  cursor: pointer;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-  z-index: 1100;
-}
-
-/* Botón de Emergencia (Izquierda Abajo) */
-.emergency-btn {
-  position: absolute;
-  bottom: 24px;
-  left: 24px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: var(--teal-dark);
-  border: 4px solid white; 
-  color: white;
-  font-weight: 700;
-  text-align: center;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 5px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  z-index: 1100;
-  font-size: 13px;
-  line-height: 1.2;
+  position: relative;
+  z-index: 10;
+  padding-bottom: 60px; 
 }
 
-/* Botón Volver al Centro (Cuando hay búsqueda) */
-.undock-btn {
-  position: fixed;      
-  top: 120px; /* Bajado para no chocar con banner/imagen */
-  left: 24px; 
-  z-index: 9999;        
-}
-
-/* --- 3. BARRA DE BÚSQUEDA --- */
-.search-container {
-  position: fixed;
-  z-index: 1000;
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-/* ESTADO 1: MODO CENTRO */
-.search-container.center {
-  left: 52.5%;
-  
-  top: 88%; 
-  
-  transform: translate(-50%, 0);
+/* --- DOCK DEL BUSCADOR (ABAJO CENTRO) --- */
+.bottom-search-dock {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%); /* Centrado horizontal perfecto */
   width: 90%;
-  max-width: 450px;
+  max-width: 500px; /* Ancho máximo para que no se estire demasiado */
+  z-index: 50; /* Por encima de todo */
 }
 
-/* ESTADO 2: MODO DOCKED */
-.search-container.docked {
-  right: 24px;
-  bottom: 24px;
-  left: auto;
-  top: auto;
-  transform: none;
-  width: auto;
-}
-
-/* Puntuación */
-.score {
+/* --- BOTÓN SOS (ABAJO DERECHA) --- */
+.emergency-fab {
   position: absolute;
-  top: 16px;
-  left: 16px;
-  background: var(--panel);
-  border: 2px solid var(--ink);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-weight: 600;
+  bottom: 30px;
+  right: 30px;
+  background: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 60;
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 59, 48, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+/* Estilos de la vista de Ingreso (Sin cambios) */
+.student-avatar-large { width: 80px; height: 80px; background-color: white; color: #46178f; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.welcome-student-title { color: white; font-size: 2rem; margin-bottom: 20px; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+.join-card { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+.join-instruction { color: #666; margin-bottom: 15px; font-weight: 500; }
+.code-input { text-align: center; font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
+.btn-join { background-color: #333; color: white; font-size: 1.2rem; }
+.btn-icon-logout { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.2rem; z-index: 20; }
+.kahoot-input-field { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 4px; outline: none; transition: border 0.2s; }
+.kahoot-input-field:focus { border-color: #333; }
+.kahoot-btn-action { width: 100%; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+.shape { position: absolute; opacity: 0.1; z-index: 1; pointer-events: none; }
+.shape-circle { width: 300px; height: 300px; background: white; border-radius: 50%; bottom: -50px; left: -50px; }
+.shape-square { width: 200px; height: 200px; background: white; top: 100px; right: -50px; transform: rotate(45deg); }
+
+.quick-search {
   display: flex;
-  gap: 8px;
-  align-items: center;
-  box-shadow: 0 2px 0 var(--ink);
-}
-.score .star { margin-left: 4px; }
-
-/* Contenedor del radial */
-.center-area {
-  min-height: 70vh;
+  width: 100%;
+  background: white;
+  border-radius: 50px; /* Bordes totalmente redondeados */
+  padding: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para que flote */
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; 
+.quick-search:focus-within {
+  border-color: #1368ce; /* Borde azul al escribir */
+  transform: scale(1.02); /* Efecto pop sutil */
+}
+
+.quick-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 20px;
+  font-size: 1rem;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.quick-search-input::placeholder {
+  color: #999;
+}
+
+.quick-search-btn {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.quick-search-btn:hover {
+  background-color: #000;
+}
+
+.bottom-search-dock {
+  position: absolute;
+  bottom: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
 }

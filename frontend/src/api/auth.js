@@ -1,19 +1,17 @@
-// api/auth.js
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:3001';
+// src/api/auth.js
+import { API_BASE } from './config';
 
-export async function loginUser({ username, password }) {
+export async function loginUser(credentials) {
   const res = await fetch(`${API_BASE}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(credentials)
   });
 
-  const payload = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const msg = payload?.error || 'Login fallido';
-    throw new Error(msg);
+  const data = await res.json();
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || 'Error al iniciar sesión');
   }
 
-  // El backend devuelve { ok: true, user }
-  return payload.user || payload;
+  return data.user; 
 }

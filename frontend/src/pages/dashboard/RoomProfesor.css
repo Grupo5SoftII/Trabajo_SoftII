@@ -1,0 +1,145 @@
+/* Layout general */
+.room-layout {
+  justify-content: flex-start; /* Contenido alineado arriba */
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* --- HEADER --- */
+.room-header {
+  width: 100%;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.pin-box {
+  background: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+.pin-label { font-size: 0.7rem; font-weight: bold; color: #666; letter-spacing: 1px; }
+.pin-number { font-size: 1.5rem; font-weight: 900; color: #333; letter-spacing: 2px; line-height: 1; }
+
+.class-title { color: white; margin: 0; font-size: 1.5rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+
+.student-counter {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.btn-close-room {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-close-room:hover { background: #000; }
+
+/* --- FEED DE MENSAJES --- */
+.feed-container {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto; /* Scroll vertical */
+  padding: 40px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Estado de Espera */
+.waiting-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0.8;
+}
+.pulse-icon { font-size: 4rem; margin-bottom: 20px; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+
+/* Grilla de Tarjetas */
+.interactions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding-bottom: 100px;
+}
+
+/* Tarjeta Base */
+.interaction-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  animation: slideUp 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.student-name { font-weight: 800; font-size: 1.1rem; color: #333; }
+.msg-time { font-size: 0.85rem; color: #999; font-weight: 500; }
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Estilo Pictograma (Azul) */
+.card-picto { border-bottom: 6px solid #1368ce; }
+.picto-display { font-size: 1.6rem; font-weight: bold; color: #1368ce; text-transform: uppercase; word-break: break-word; }
+
+/* Estilo Emergencia (Rojo y Alerta) */
+.card-emergency {
+  border: 4px solid #ff3b30;
+  background-color: #fff0f0;
+  animation: shake 0.5s;
+}
+.siren-icon { font-size: 2.5rem; margin-bottom: 5px; }
+.emergency-text { font-size: 1.2rem; font-weight: bold; color: #c62828; }
+
+@keyframes shake {
+  0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }
+}
+
+/* Shapes decorativos */
+.shape { position: absolute; opacity: 0.1; z-index: 1; pointer-events: none; }
+.shape-circle { width: 300px; height: 300px; background: white; border-radius: 50%; bottom: -50px; left: -50px; }
+.shape-square { width: 200px; height: 200px; background: white; top: 100px; right: -50px; transform: rotate(45deg); }

@@ -1,37 +1,6 @@
 import React from "react";
 import { Menu, MenuItem, SubMenu } from "@spaceymonk/react-radial-menu";
 
-/*
-export default function RadialQuickChat({
-  centerX,
-  centerY,
-  onItem = () => {},
-  onCenter = () => {},
-}) {
-  const handleItemClick = (e, idx, data) => {
-    onItem(data);
-  };
-  const handleSubMenuClick = (e, idx, data) => {
-    // opcional: abrir modal/lista para esa categoría
-    onItem(data);
-  };
-  const handleDisplayClick = () => {
-    onCenter();
-  };
-
-  return (
-    <Menu
-      centerX={centerX}
-      centerY={centerY}
-      innerRadius={90}
-      outerRadius={180}
-      show={true}                 
-      animation={["fade", "scale"]}
-      animationTimeout={160}
-      drawBackground
-    >
-    */
-
   export default function RadialQuickChat({
   centerX,
   centerY,
